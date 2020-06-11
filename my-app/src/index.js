@@ -9,11 +9,11 @@ function Square(props) {
     </button>
   );
 }
-// 2
+// 3
 // нужно, чтобы Board получил пропсы squares и onClick из
 //компонента Game.
 class Board extends React.Component {
-  //Поскольку внутри Board у нас один обработчик кликов для всех
+  //  4  Поскольку внутри Board у нас один обработчик кликов для всех
   //Squares, нам достаточно передать позицию для каждого Square в
   //обработчик onClick, чтобы показать по какой клетке мы кликнули.
   renderSquare(i) {
@@ -42,16 +42,21 @@ class Board extends React.Component {
     );
   }
 }
-//
+//1
 //Мы хотим, чтобы компонент Game отображал список последних ходов.
 //Для этого ему понадобится доступ к history, поэтому мы поместим
 //history в состояние родительского компонента Game.
+//Это даст компоненту Game полный контроль над данными Board и
+//позволит отдавать команду для Board на рендеринг прошлых ходов
+//из history
 class Game extends React.Component {
-  //   1   ---------------------
+  //   2   ---------------------
   //зададим начальное состояние компонента Game внутри конструктора
   constructor(props) {
     super(props);
     this.state = {
+      //массив history будет хранить все состояния поля.
+      //От первого до последнего хода
       history: [
         {
           squares: Array(9).fill(null),
@@ -74,7 +79,7 @@ class Game extends React.Component {
       return;
     }
     squares[i] = this.state.xIsNext ? "X" : "O";
-    //добавим новые записи истории в history
+    //  7  добавим новые записи истории в history
     //метод concat() не изменяет оригинальный массив
     this.setState({
       history: history.concat([
@@ -100,12 +105,11 @@ class Game extends React.Component {
   }
 
   render() {
-    //обновим метод render компонента Game, чтобы использовать
-    //последнюю запись из истории для определения и отображения
-    //статуса игры
+    //   5
+    //использовать запись из истории для определения и
+    //отображения статуса игры, соответствующий stepNumber
     const history = this.state.history;
-    //вместо последнего хода рендерил ход,
-    //соответствующий stepNumber
+    //
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
     //Используя метод map, мы можем отобразить историю ходов в
@@ -142,6 +146,7 @@ class Game extends React.Component {
     return (
       <div className="game">
         <div className="game-board">
+          {/*  6 */}
           <Board squares={current.squares} onClick={(i) => this.handleClick(i)} />
         </div>
         <div className="game-info">
